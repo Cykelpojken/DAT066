@@ -3,16 +3,37 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+public struct DbInfo
+{
+    private static Database Db = new Database();
+    public string ModelType { get; set; }
+    public string ModelInfo { get; set; }
+    public int TaskAmount { get; set; }
+    public string Text { get; set; }
+    public int Type { get; set; }
+    public bool Begun { get; set; }
+    public int Id { get; set; }
+    public Database GetDatabase()
+    {
+        return Db;
+    }
+}
+
+
 public class Main : MonoBehaviour {
-    private Observer test;
-    private static QrReader qr;
-    private ShowG g;
+
+    public static Task task;
+
     private void Awake()
     {
-        g = gameObject.AddComponent(typeof(ShowG)) as ShowG;
-        qr = gameObject.AddComponent(typeof(QrReader)) as QrReader;
-        test = new Observer(qr, g);
+        task = gameObject.AddComponent(typeof(Task)) as Task;
+        DbInfo firstTaskInfo = new DbInfo
+        {
+            Type = 0,
+            Begun = false
+        };
+        task.InitDbStruct(firstTaskInfo);
+        task.StartTask();
     }
-    
-
 }
+

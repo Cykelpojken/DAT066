@@ -11,8 +11,8 @@ public class Observer : MonoBehaviour{
 
     public Observer(QrReader qr, ShowG g)
     {
-        this.g = g;
         this.qr = qr;
+        this.g = g;
         qr.OnQrDetected += HandleOnQrDetected;
     }
 

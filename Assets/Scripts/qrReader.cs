@@ -19,18 +19,12 @@ public class QrReader : MonoBehaviour
     public float X2 { get; set; }
     public float Y1 { get; set; }
     public float Y2 { get; set; }
-    byte[] fileData;
     private BarcodeReader barCodeReader;
     // Use this for initialization
     void Start()
     {
         barCodeReader = new BarcodeReader();
         StartCoroutine(InitializeCamera());
-        if (File.Exists("/QR_codes/QR_2.png"))
-        {
-            Debug.Log("asd");
-            fileData = File.ReadAllBytes("D:/hugfro/Devel/Project/Assets/QR_codes");
-        }
     }
     [AddComponentMenu("System/VuforiaScanner")]
     private IEnumerator InitializeCamera()
@@ -40,7 +34,6 @@ public class QrReader : MonoBehaviour
 
         var isFrameFormatSet = CameraDevice.Instance.SetFrameFormat(Image.PIXEL_FORMAT.GRAYSCALE, true);
         
-
         // Force autofocus.
         var isAutoFocus = CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_NORMAL);
         if (!isAutoFocus)
@@ -58,12 +51,13 @@ public class QrReader : MonoBehaviour
             try
             {
                 var cameraFeed = CameraDevice.Instance.GetCameraImage(Image.PIXEL_FORMAT.GRAYSCALE);
+                //cameraFeed.Pixels
                 if (cameraFeed == null)
                 {
                     return;
                 }
                 var data = barCodeReader.Decode(cameraFeed.Pixels, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8);
-                //var data = barCodeReader.Decode(fileData, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.Gray8);
+                //var data = barCodeReader.Decode(fileData, cameraFeed.BufferWidth, cameraFeed.BufferHeight, RGBLuminanceSource.BitmapFormat.RGB32);
                 if (data != null)
                 {
                     float[] tmp = new float[4];
