@@ -1,81 +1,68 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
-using Mono.Data.Sqlite;
-using System.Data;
-using System;
 
 public class Database : MonoBehaviour {
-    private IDbConnection dbconn;
-    private DbInfo dbStruct;
-    private string conn;
-    public Database()
+
+    private string model;
+    private string url;
+
+    private string answer = null;
+
+    public void InitDb(string model)
     {
-            conn = "URI=file:" + Application.dataPath + "/DB3.sqlite3"; //Path to database.
+        Debug.Log("Init");
+        this.url = "http://DESKTOP-HB18BHU/ar_service_db/";
+        this.model = model;
     }
 
-    public bool GetCon()
+    private void SendRequest(string url, WWWForm form)
     {
-        try
+        
+        using (WWW www = new WWW(url, form))
         {
-            dbconn = (IDbConnection)new SqliteConnection(conn);
-            dbconn.Open(); //Open connection to the database.
-        }
-        catch(Exception E)
-        {
-            return false;
-        }
-        return true;
-    }
+            WaitForSeconds w;
+            while (!www.isDone)
+                w = new WaitForSeconds(0.1f);
 
-    public void GetModel(string model, DbInfo db)
-    {
-        try
-        {
-            dbStruct = db;
-            IDbCommand dbcmd = dbconn.CreateCommand();
-            string sqlQuery = "SELECT * FROM QR WHERE ID = '" + model + "'";
-            dbcmd.CommandText = sqlQuery;
-            IDataReader reader = dbcmd.ExecuteReader();
-            while (reader.Read())
-            {
-                dbStruct.ModelType = reader.GetString(0);
-                dbStruct.ModelInfo = reader.GetString(1);
-                dbStruct.TaskAmount = reader.GetInt32(2);
-            }
-            dbStruct.Id = 1;
-            GetTask(dbStruct);
-        }
-        catch(SqliteException e)
-        {
-            dbStruct.ModelType = null;
+            answer = www.text;
         }
     }
 
-    public void GetTask(DbInfo db)
+    public string[] GetTasks()
     {
-        try
-        {
-            dbStruct = db;
-            IDbCommand dbcmd = dbconn.CreateCommand();
-            string sqlQuery = "SELECT task, task_type FROM " + dbStruct.ModelType + " WHERE tasknr = " + dbStruct.Id;
-            dbcmd.CommandText = sqlQuery;
-            IDataReader reader = dbcmd.ExecuteReader();
-            while (reader.Read())
-            {
-                dbStruct.Text = reader.GetString(0);
-                dbStruct.Type = reader.GetInt32(1);
-            }
-        }
-        catch (SqliteException e)
-        {
-
-        }
+        WWWForm form = new WWWForm();
+        form.AddField("modelPost", model);
+        SendRequest(url + "GetModel.php", form);
+        return SplitString(';'); 
     }
-    
-    public DbInfo GetDbInfo()
+
+    public string[] GetTask(int taskNr)
+    { 
+        WWWForm form = new WWWForm();
+        form.AddField("modelPost", model);
+        form.AddField("tasknrPost", taskNr);
+        SendRequest(url + "GetTask.php", form);
+        return SplitString(';');
+    }
+
+    private string[] SplitString(char splitter) 
     {
-        return dbStruct;
+        return answer.Split(splitter);
+    }
+
+    private int[] SplitStringToInt(char splitter)
+    {
+        string[] splitAnswer = answer.Split(splitter);
+        int[] intArray = new int[splitAnswer.Length];
+        int index = 0;
+        foreach(string s in splitAnswer)
+        {
+            intArray[index] = int.Parse(s);
+            index++;
+        }
+        return intArray;
     }
 }
-

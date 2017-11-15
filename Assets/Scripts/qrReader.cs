@@ -21,6 +21,7 @@ public class QrReader : MonoBehaviour
     public float Y2 { get; set; }
     private BarcodeReader barCodeReader;
     // Use this for initialization
+
     void Start()
     {
         barCodeReader = new BarcodeReader();
@@ -40,7 +41,8 @@ public class QrReader : MonoBehaviour
         {
             CameraDevice.Instance.SetFocusMode(CameraDevice.FocusMode.FOCUS_MODE_NORMAL);
         }
-       cameraInitialized = true;
+        cameraInitialized = true;
+      
     }
     // Update is called once per frame
     void Update()

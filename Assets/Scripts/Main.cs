@@ -1,39 +1,40 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public struct DbInfo
-{
-    private static Database Db = new Database();
-    public string ModelType { get; set; }
-    public string ModelInfo { get; set; }
-    public int TaskAmount { get; set; }
-    public string Text { get; set; }
-    public int Type { get; set; }
-    public bool Begun { get; set; }
-    public int Id { get; set; }
-    public Database GetDatabase()
-    {
-        return Db;
-    }
-}
-
 
 public class Main : MonoBehaviour {
+    
 
-    public static Task task;
+    private static QrReader qr;
+    private GameObject ui;
+    private Database db;
+    private UIQrScanner uiQr;
+    private StartLogin startLogin;
 
     private void Awake()
     {
-        task = gameObject.AddComponent(typeof(Task)) as Task;
-        DbInfo firstTaskInfo = new DbInfo
-        {
-            Type = 0,
-            Begun = false
-        };
-        task.InitDbStruct(firstTaskInfo);
-        task.StartTask();
+         qr = gameObject.AddComponent(typeof(QrReader)) as QrReader;
+         qr.enabled = false;
+         startLogin = gameObject.AddComponent(typeof(StartLogin)) as StartLogin;
+         ui = Instantiate(Resources.Load("QRscanUI") as GameObject);
+         uiQr = ui.GetComponent<UIQrScanner>();
+         startLogin.VinScanned += HandleVinScanned;
+         startLogin.SetStart(qr, uiQr);
+    }
+
+    private void HandleVinScanned(string arg1)
+    {
+        Debug.Log(arg1);
+        startLogin.VinScanned -= HandleVinScanned;
+        db = gameObject.AddComponent(typeof(Database)) as Database;
+        db.InitDb(arg1);
+        Destroy(startLogin);
+        Destroy(uiQr);
+        Destroy(ui);
+        GenericTask task = gameObject.AddComponent(typeof(GenericTask)) as GenericTask;
+        task.InitTask(db.GetTasks());
     }
 }
-

@@ -1,46 +1,67 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 interface IGenericTask
 {
+    void InitTask(string[] taskInfo, Database db);
     void StartTask();
+    void DestroyTask();
+    void SetListener(Action action);
 }
 
-public class GenericTask : MonoBehaviour, IGenericTask {
 
-    public GenericTask(int taskType)
+public class GenericTask : MonoBehaviour {
+    
+    private IGenericTask gTask;
+    private Database db;
+    private int taskAmount;
+    private int currentTask;
+    private string[] taskInfo;
+
+    public void InitTask(string[] taskInfo)
     {
-        switch(taskType)
+        db = GameObject.FindObjectOfType<Database>();
+        this.taskInfo = taskInfo;
+        int taskAmount = Int32.Parse(taskInfo[5]);
+        currentTask = 0;
+        NextTask(currentTask);
+    }
+
+    private void NextTask(int taskType)
+    {
+        switch (taskType)
         {
             case 0:
-                
-                // New class of task type 0
-                // example new TaskFindVehicle();
+                gTask = gameObject.AddComponent(typeof(TaskShowServiceType)) as TaskShowServiceType;
+                gTask.InitTask(taskInfo, db);
+                gTask.SetListener(ActionDone);
                 break;
-
             case 1:
-
-                // New class of task type 0
-                // example new TaskDisplayServiceIinfo();
+                gTask = gameObject.AddComponent(typeof(TaskFindComponent)) as TaskFindComponent;
+                gTask.InitTask(taskInfo, db);
+                gTask.SetListener(ActionDone);
                 break;
-
             case 2:
-
-                // New class of task type 0
-                // example new TaskFindComponent();
                 break;
-
             case 3:
-
-                // New class of task type 0
-                // example new TaskMountComponent();
                 break;
         };
     }
 
-    public void StartTask()
+    private void ActionDone()
     {
-
+        if (currentTask <= taskAmount)
+        {
+            currentTask++;
+            taskInfo = db.GetTask(currentTask);
+            NextTask(Int32.Parse(taskInfo[2]));
+        }
     }
 
+    public void StartTask()
+    {
+            gTask.StartTask();
+    }
 }
+
