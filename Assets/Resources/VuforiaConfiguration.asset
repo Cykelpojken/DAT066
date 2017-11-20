@@ -8,16 +8,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: -2067402452, guid: 1e108ae5f2133934f948edded555f03e, type: 3}
+  m_Script: {fileID: -2067402452, guid: bab6fa851cf5a1a4bba3cec5f191cb8e, type: 3}
   m_Name: VuforiaConfiguration
   m_EditorClassIdentifier: 
   vuforia:
     vuforiaLicenseKey: 
-    ufoLicenseKey: QVVoRUNNci8vLy8vQUFBQUtNNUV6dlk0ZWtSem1FUmc2Z25jTXNNdkcrYS9nbHA1ZS9seXlSb3ViL2FqWkxTZ3lnZVdlOHlOc1NxTWp4YjVWUWo4T2xDbXk4MVRsZkZjRHFWYzBubmNKbTdxRTNBVXZ6d1hvNmM0d0Y1UnI5bUFQMzlmc3o5YWlwc3FDbEhMQVBKQWJRK202U05aYzVFcEVvL1Z1TG5SY0N4RFdBOFJib3RoTUVCWDYwKzRLUjdlYkxWY0RvRlVIOGVZMVRoZnA2b3VuOHRLcy92V0c4SW8zMG9HUlVTeml2YWwxN2VBc2wvWjdRN2JYZmpEVmZ6K2VmcXM2eUMrYXYvNmE3M2JaVFBlMzRLLzFvaTJpRkJIcDl6RnNrK0d0cjBjZXVka3BFYWw4M1ZKaUVCQzllSEh0eXpJdndaNVZFYW1XMnBEL2xMOUhlbTNBL1kxWlYxRFZLRVNCVTRSR0hWSlg3WDRLRDBMQnhaSlhKbXY=
+    ufoLicenseKey: QVJUeCtUei8vLy8vQUFBQUtFbmordXFjcjBCT29VekpORE9GazBsTFZDa0hpd1lJUTdoUnN5eWc4YkxIL2V0WVJkemwrRnVNejlTcEgzK3cvVzhkZUhZYkpDSmpKalZuL09TN2ZmL2pQb1gwcEphMzRwbTZLUGU2NHNSQkIwU0JGdVUxb3dvakVmcXl4NURFNnUrZUZKMmZtTWxlNTkzTDh2TXpsZ3pIdnM4aG9tT083K0kxYitIZUhEZWF6R1J2Z2kycjdJSEp6Q3k1RENVVTdvekZFYWoxeU5KUnhxZFVKNnR3MFNVSko0SGhuVWE1NW14Wlc0dVV0VFlDc29MZ0NhSWl5N3czMGpHbDBHcFZpY0UrWFN1TnZXUnF1VnRhYllocWIxOHdPZFJHUjV5RkEwNktucTl3WmxOWTVsZS9MOXdJaTlZWnFoVEhFdE0zSGNuWXVRZGloM2FldCs0MXFyMzVoWjd3NU9JTmJlTU1wTlBaWWp2elNTWUs=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 10
-    maxSimultaneousObjectTargets: 10
+    maxSimultaneousImageTargets: 1
+    maxSimultaneousObjectTargets: 1
     useDelayedLoadingObjectTargets: 0
     cameraDirection: 0
     mirrorVideoBackground: 0
@@ -27,8 +27,8 @@ MonoBehaviour:
     eyewearType: 1
     stereoFramework: 0
     seeThroughConfiguration: 1
-    viewerName: Generic Cardboard
-    viewerManufacturer: Vuforia
+    viewerName: 
+    viewerManufacturer: 
     useCustomViewer: 0
     customViewer:
       Version: 0

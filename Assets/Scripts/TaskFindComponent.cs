@@ -9,6 +9,7 @@ public class TaskFindComponent : MonoBehaviour, IGenericTask
     public string vin;
     private bool first = true;
     private string oldArg = "";
+    private string[] taskInfo;   
     private GameObject sprite;
     private GameObject ui;
     private UIQrScanner uiQr;
@@ -17,26 +18,43 @@ public class TaskFindComponent : MonoBehaviour, IGenericTask
 
     public void InitTask(string[] taskInfo, Database db)
     {
-
+        this.taskInfo = taskInfo;
         qr = GameObject.FindObjectOfType<QrReader>();
         qr.OnQrDetected += HandleOnQrDetected;
         qr.enabled = true;
         g = gameObject.AddComponent(typeof(ShowG)) as ShowG;
         ui = Instantiate(Resources.Load("QRscanUI") as GameObject);
         uiQr = ui.GetComponent<UIQrScanner>();
+        uiQr.button.gameObject.SetActive(false);
         uiQr.SetText(taskInfo[0]);
+
     }
 
     private void HandleOnQrDetected(string arg1, float[] arg2)
     {
-        if (first && oldArg != arg1)
+
+        if (first)
         {
-            sprite = Resources.Load("Sprite") as GameObject;
-            sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Grey");
-            sprite = Instantiate(sprite);
             first = false;
+            sprite = Resources.Load("Sprite") as GameObject;
+            sprite = Instantiate(sprite);
         }
-        else
+        if (!arg1.Equals(oldArg))
+        {
+            if (arg1.Equals(taskInfo[1]))
+            {
+                sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Green");
+                uiQr.GetButton().gameObject.SetActive(true);
+                uiQr.button.enabled = true;
+                uiQr.button.onClick.AddListener(ConfirmClicked);
+            }
+            else
+            {
+                sprite.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/Red");
+                uiQr.button.gameObject.SetActive(false);
+            }
+        }
+        if(!first)
         {
             g.Draw(sprite, arg2[0], arg2[1], arg2[2], arg2[3]);
         }
@@ -56,7 +74,9 @@ public class TaskFindComponent : MonoBehaviour, IGenericTask
 
     public void ConfirmClicked()
     {
-        //startupScript.ButtonConfirmPressed -= ConfirmClicked;
+        DestroyTask();
+        qr.OnQrDetected -= HandleOnQrDetected;
+        Destroy(uiQr);
         TaskDoneAction();
     }
 

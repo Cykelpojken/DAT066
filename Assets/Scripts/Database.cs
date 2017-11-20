@@ -11,10 +11,13 @@ public class Database : MonoBehaviour {
 
     private string answer = null;
 
-    public void InitDb(string model)
+    public void InitDb()
     {
-        Debug.Log("Init");
         this.url = "http://DESKTOP-HB18BHU/ar_service_db/";
+    }
+
+    public void SetModel(string model)
+    {
         this.model = model;
     }
 
@@ -30,7 +33,36 @@ public class Database : MonoBehaviour {
             answer = www.text;
         }
     }
+    public Boolean GetUser(string user)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("userPost", user);
+        SendRequest(url + "CheckUser.php", form);
+        string tmp = "true";
+        Debug.Log(answer);
+        char[] tasd = answer.ToCharArray();
+        for (int i = 0; i < tasd.Length -1; i++)
+            if (tasd[i] != tmp[i])
+            {
+                return false;
+            }
+        return true;
+    }
 
+    public Boolean GetModel(string model)
+    {
+        WWWForm form = new WWWForm();
+        form.AddField("modelPost", model);
+        SendRequest(url + "CheckModel.php", form);
+        string tmp = "true";
+        char[] tasd = answer.ToCharArray();
+        for (int i = 0; i < tasd.Length - 1; i++)
+            if (tasd[i] != tmp[i])
+            {
+                return false;
+            }
+        return true;
+    }
     public string[] GetTasks()
     {
         WWWForm form = new WWWForm();

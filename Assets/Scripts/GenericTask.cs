@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+/**
+ * Interfadce for a task
+ * 
+ */ 
 interface IGenericTask
 {
     void InitTask(string[] taskInfo, Database db);

@@ -21,12 +21,22 @@ public class QrReader : MonoBehaviour
     public float Y2 { get; set; }
     private BarcodeReader barCodeReader;
     // Use this for initialization
-
+    /**
+     * Starts a new incatnce of barcode reader 
+     * And tries to initialize a camrea and starts it as a Coroutine.
+     * Is called wneh game object is added 
+     */ 
     void Start()
     {
         barCodeReader = new BarcodeReader();
         StartCoroutine(InitializeCamera());
     }
+
+    /**
+     * Starts Vuforia, uisng vuforia scanner
+     * Sets various camera options
+     * 
+     */
     [AddComponentMenu("System/VuforiaScanner")]
     private IEnumerator InitializeCamera()
     {
@@ -45,6 +55,17 @@ public class QrReader : MonoBehaviour
       
     }
     // Update is called once per frame
+    /**
+     * Updated once per frame
+     * Action OnQrDetected is performed on a qr detect
+     * All listners will get the text data from the qr code
+     * as well as the position in a Float array stored as following:
+     *      X1 index 0: bottom left
+     *      X2 index 2: top right
+     *      Y1 index 2: top right
+     *      Y2 index 0: bottom left   
+     * 
+     */
     void Update()
     {
         
@@ -67,11 +88,17 @@ public class QrReader : MonoBehaviour
                     tmp[1] = this.X2 = data.ResultPoints[2].X; // index 2: top right
                     tmp[2] = this.Y1 = data.ResultPoints[2].Y; // index 2: top right
                     tmp[3] = this.Y2 = data.ResultPoints[0].Y; // index 0: bottom left   
-                    OnQrDetected(data.Text, tmp);
+                    try
+                    {
+                        OnQrDetected(data.Text, tmp);
+                    }
+                    catch (NullReferenceException E)
+                    { }
+
                 }
                 else
                 {
-                    Debug.Log("nada");
+                    //No qr found
                 }
             }
             catch (Exception e)

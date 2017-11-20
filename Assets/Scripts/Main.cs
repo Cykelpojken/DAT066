@@ -16,21 +16,22 @@ public class Main : MonoBehaviour {
 
     private void Awake()
     {
-         qr = gameObject.AddComponent(typeof(QrReader)) as QrReader;
-         qr.enabled = false;
-         startLogin = gameObject.AddComponent(typeof(StartLogin)) as StartLogin;
-         ui = Instantiate(Resources.Load("QRscanUI") as GameObject);
-         uiQr = ui.GetComponent<UIQrScanner>();
-         startLogin.VinScanned += HandleVinScanned;
-         startLogin.SetStart(qr, uiQr);
+
+        db = gameObject.AddComponent(typeof(Database)) as Database;
+        db.InitDb();
+        qr = gameObject.AddComponent(typeof(QrReader)) as QrReader;
+        qr.enabled = false;
+        startLogin = gameObject.AddComponent(typeof(StartLogin)) as StartLogin;
+        ui = Instantiate(Resources.Load("QRscanUI") as GameObject);
+        uiQr = ui.GetComponent<UIQrScanner>();
+        startLogin.VinScanned += HandleVinScanned;
+        startLogin.SetStart(qr, uiQr);
     }
 
     private void HandleVinScanned(string arg1)
     {
-        Debug.Log(arg1);
         startLogin.VinScanned -= HandleVinScanned;
-        db = gameObject.AddComponent(typeof(Database)) as Database;
-        db.InitDb(arg1);
+        db.SetModel(arg1);
         Destroy(startLogin);
         Destroy(uiQr);
         Destroy(ui);
